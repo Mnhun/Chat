@@ -20,6 +20,7 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         loadReceiveDetails();
+        setListener();
     }
     private void  loadReceiveDetails(){
         receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
