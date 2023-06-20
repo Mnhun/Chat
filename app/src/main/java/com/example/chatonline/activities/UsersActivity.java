@@ -1,11 +1,10 @@
 package com.example.chatonline.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chatonline.adapters.UsersAdapter;
 import com.example.chatonline.databinding.ActivityUsersBinding;
@@ -55,6 +54,7 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                             user.email = queryDocumentSnapshot.getString(Constants.KEY_EMAIL);
                             user.image = queryDocumentSnapshot.getString(Constants.KEY_IMAGE);
                             user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKE);
+                            user.id = queryDocumentSnapshot.getId();
                             users.add(user);
                         }
                         if(users.size() > 0){
