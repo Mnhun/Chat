@@ -43,8 +43,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        loadReceiveDetails();
         setListener();
+        loadReceiveDetails();
         init();
         listenMessages();
     }
@@ -63,7 +63,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendMessage(){
         HashMap<String, Object> message = new HashMap<>();
-        message.put(Constants.KEY_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+        message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
