@@ -31,8 +31,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
 
     private ActivityChatBinding binding;
     private User receiverUser;
@@ -42,6 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private FirebaseFirestore dataBase;
     private String conversionId = null;
+    private Boolean isReceiverAvailable = false;
 
 
     @Override
@@ -66,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
         binding.chatRecyclerView.setAdapter(chatAdapter);
         dataBase = FirebaseFirestore.getInstance();
     }
+
 
     private void sendMessage(){
         HashMap<String, Object> message = new HashMap<>();
@@ -97,6 +100,30 @@ public class ChatActivity extends AppCompatActivity {
         }
         binding.inputMessage.setText(null);
     }
+
+    private void listenAvailabilityOfReceiver(){
+        dataBase.collection(Constants.KEY_COLLECTION_USERS)
+                .document(receiverUser.id).addSnapshotListener(ChatActivity.this,  (value, error) -> {
+                    if(error != null){
+                        return;
+                    }
+                    if (value != null){
+                        if (value.getLong(Constants.KEY_AVAILABILITY) != null){
+                            int availability = Objects.requireNonNull(value.getLong(Constants.KEY_AVAILABILITY)).intValue();
+                            isReceiverAvailable = availability == 1;
+                        }
+                    }
+                    if (isReceiverAvailable){
+                        binding.textAvailability.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        binding.textAvailability.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+
+
 
     private void listenMessages(){
         dataBase.collection(Constants.KEY_COLLECTION_CHAT)
@@ -202,4 +229,10 @@ public class ChatActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listenAvailabilityOfReceiver();
+    }
 }
